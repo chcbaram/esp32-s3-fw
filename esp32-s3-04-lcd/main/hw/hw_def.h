@@ -36,8 +36,8 @@
 
 #define _USE_HW_LOG
 #define      HW_LOG_CH              _DEF_UART2
-#define      HW_LOG_BOOT_BUF_MAX    1024
-#define      HW_LOG_LIST_BUF_MAX    1024
+#define      HW_LOG_BOOT_BUF_MAX    (2*1024)
+#define      HW_LOG_LIST_BUF_MAX    (4*1024)
 
 #define _USE_HW_GPIO
 #define      HW_GPIO_MAX_CH         4

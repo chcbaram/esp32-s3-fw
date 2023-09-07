@@ -58,9 +58,9 @@ static void (*frameCallBack)(void) = NULL;
 volatile static bool  is_write_frame = false;
 static cb_data_t cb_data;
 
-uint32_t colstart = 0;
-uint32_t rowstart = 320 - HW_LCD_HEIGHT;
-
+static uint32_t colstart = 0;
+static uint32_t rowstart = 320 - HW_LCD_HEIGHT;
+static uint8_t dir_mode = 0;
 
 
 #ifdef _USE_HW_CLI
@@ -307,6 +307,8 @@ void st7789SetRotation(uint8_t mode)
       writedata(MADCTL_MX | MADCTL_MV | MADCTL_RGB);
       break;
   }
+
+  dir_mode = mode;
 }
 
 void st7789SetWindow(int32_t x0, int32_t y0, int32_t x1, int32_t y1)
@@ -432,6 +434,7 @@ void cliCmd(cli_args_t *args)
 
   if (args->argc == 1 && args->isStr(0, "info"))
   {
+    cliPrintf("Dir    : %d\n", dir_mode);
     cliPrintf("Width  : %d\n", _width);
     cliPrintf("Heigth : %d\n", _height);
     ret = true;
@@ -473,10 +476,23 @@ void cliCmd(cli_args_t *args)
     ret = true;
   }
 
+  if (args->argc == 2 && args->isStr(0, "dir"))
+  {
+    uint8_t dir;
+
+    dir = args->getData(1);
+    dir = constrain(dir, 0, 3);
+
+    st7789SetRotation(dir);
+
+    ret = true;
+  }
+
   if (ret == false)
   {
     cliPrintf("st7789 info\n");
     cliPrintf("st7789 test\n");
+    cliPrintf("st7789 dir 0~3\n");
   }
 }
 
